@@ -1,4 +1,5 @@
 require File.dirname(__FILE__) + '/../test_helper'
+require 'money'
 
 class UPSTest < Test::Unit::TestCase
   
@@ -204,4 +205,28 @@ class UPSTest < Test::Unit::TestCase
     assert_not_equal prices_of.call(:fake_google_as_commercial), prices_of.call(:fake_google_as_residential)
     assert prices_of.call(:fake_home_as_residential).first > prices_of.call(:fake_home_as_commercial).first
   end
+
+  def test_insured_value_should_add_extra_cost
+    package_without_insurance = Package.new((16 * 50), [24,24,36], :units => :imperial)
+    package_with = Package.new((16 * 50), [24,24,36], :units => :imperial, :insured_value => Money.new(5000_00))
+    response_without_insurance = @carrier.find_rates(
+                 @locations[:beverly_hills],
+                 @locations[:london],
+                 [package_without_insurance],
+                 :test => true
+               )
+    response_with_insurance = @carrier.find_rates(
+                 @locations[:beverly_hills],
+                 @locations[:london],
+                 [package_with],
+                 :test => true
+               )
+    rate_without = response_without_insurance.rates.first
+    rate_with = response_with_insurance.rates.first
+    # same service
+    assert_equal rate_without.service_name, rate_with.service_name
+    # but different price
+    assert_not_equal rate_without.price, rate_with.price
+  end
+
 end

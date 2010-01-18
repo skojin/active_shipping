@@ -50,13 +50,14 @@ Gem and tarball forthcoming on rubyforge.
   
     # Package up a poster and a Wii for your nephew.
     packages = [
-      Package.new(  100,                        # 100 grams
-                    [93,10],                    # 93 cm long, 10 cm diameter
-                    :cylinder => true),         # cylinders have different volume calculations
+      Package.new(  100,                                # 100 grams
+                    [93,10],                            # 93 cm long, 10 cm diameter
+                    :cylinder => true),                 # cylinders have different volume calculations
     
-      Package.new(  (7.5 * 16),                 # 7.5 lbs, times 16 oz/lb.
-                    [15, 10, 4.5],              # 15x10x4.5 inches
-                    :units => :imperial)        # not grams, not centimetres
+      Package.new(  (7.5 * 16),                          # 7.5 lbs, times 16 oz/lb.
+                    [15, 10, 4.5],                       # 15x10x4.5 inches
+                    :units => :imperial,                 # not grams, not centimetres
+                    :insured_value => Money.new(23900))  # insurance to full cost (UPS Only)
     ]
   
     # You live in Beverly Hills, he lives in Ottawa

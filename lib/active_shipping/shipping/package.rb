@@ -4,11 +4,12 @@ module ActiveMerchant #:nodoc:
       include Quantified
       
       cattr_accessor :default_options
-      attr_reader :options, :value, :currency
+      attr_reader :options, :value, :currency, :insured_value
 
       # Package.new(100, [10, 20, 30], :units => :metric)
       # Package.new(Mass.new(100, :grams), [10, 20, 30].map {|m| Length.new(m, :centimetres)})
       # Package.new(100.grams, [10, 20, 30].map(&:centimetres))
+      # Package.new(100, [10, 20, 30], :insured_value => Money.new(50000))
       def initialize(grams_or_ounces, dimensions, options = {})
         options = @@default_options.update(options) if @@default_options
         options.symbolize_keys!
@@ -32,6 +33,7 @@ module ActiveMerchant #:nodoc:
         @value = Package.cents_from(options[:value])
         @currency = options[:currency] || (options[:value].currency if options[:value].respond_to?(:currency))
         @cylinder = (options[:cylinder] || options[:tube]) ? true : false
+        @insured_value = options[:insured_value]
       end
   
       def cylinder?

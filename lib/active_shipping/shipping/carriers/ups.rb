@@ -207,10 +207,19 @@ module ActiveMerchant
                   value = ((imperial ? package.lbs : package.kgs).to_f*1000).round/1000.0 # 3 decimals
                   package_weight << XmlNode.new("Weight", [value,0.1].max)
                 end
-              
+
+                if package.insured_value
+                  package_node << XmlNode.new("PackageServiceOptions") do |package_service_options|
+                    package_service_options << XmlNode.new("InsuredValue") do |insured_value_node|
+                      insured_value_node << XmlNode.new("CurrencyCode", package.insured_value.currency)
+                      insured_value_node << XmlNode.new("MonetaryValue", package.insured_value.cents.to_f / 100)
+                    end
+                  end
+                end
+
                 # not implemented:  * Shipment/Package/LargePackageIndicator element
                 #                   * Shipment/Package/ReferenceNumber element
-                #                   * Shipment/Package/PackageServiceOptions element
+                #                   * Shipment/Package/PackageServiceOptions/COD element
                 #                   * Shipment/Package/AdditionalHandling element  
               end
               
